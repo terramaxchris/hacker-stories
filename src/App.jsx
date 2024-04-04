@@ -1,46 +1,31 @@
-// import * as React from 'react';
+/* eslint-disable react/prop-types */
+//import * as React from 'react';
 
 const welcome = {
   title: "React",
   greeting: "Hey",
 };
 
-const list = [
-  {
-    title: 'React',
-    url: 'https//reactjs.org',
-    author: 'Jordan Walke',
-    num_comments: 3,
-    points: 4,
-    objectID: 0,
-  },
-  {
-    title: 'Redux',
-    url: 'https//redux.js.org',
-    author: 'Dan Abramov, Andrew Clark',
-    num_comments: 2,
-    points: 5,
-    objectID: 1,
-  }
-]
+const Search = () => {
+  const handleChange = (event) => {
+    //synthetic event
+    console.log(event);
+    // value of target (here: input HTMP element)
+    console.log(event.target.value);
+  };
 
-const filteredList = list.filter((item) =>
-  item.author.includes('a')
-)
-
-function Search() {
   return (
     <div>
       <label htmlFor='search'>Search: </label>
-      <input id='search' type='text' />
+      <input id='search' type='text' onChange={handleChange}/>
+      {/* dont't do onChange={handleChange()}, that's bad--will mean it gets the RETURN VALUE of the function, not the func itself */}
     </div>
   )
 }
 
-function List() {
-  return (
+const List = (props) => 
     <ul>
-        {filteredList.map(function (item) {
+        {props.list.map((item) => {
           return <li key={item.objectID}>
             <span>
               <a href={item.url}>{item.title}  </a>
@@ -51,10 +36,28 @@ function List() {
             </li>;
         })}
       </ul>
-  )
-}
+  
 
 function App() {
+
+  const stories = [
+    {
+      title: 'React',
+      url: 'https//reactjs.org',
+      author: 'Jordan Walke',
+      num_comments: 3,
+      points: 4,
+      objectID: 0,
+    },
+    {
+      title: 'Redux',
+      url: 'https//redux.js.org',
+      author: 'Dan Abramov, Andrew Clark',
+      num_comments: 2,
+      points: 5,
+      objectID: 1,
+    }
+  ]
 
   return (
     <div>
@@ -64,7 +67,7 @@ function App() {
       
       <hr />
 
-      <List />
+      <List list={stories}/>
 
     </div>
   );
