@@ -28,16 +28,18 @@ const filteredList = list.filter((item) =>
   item.author.includes('a')
 )
 
-function App() {
-
+function Search() {
   return (
     <div>
-      <h1>{welcome.greeting}, {welcome.title}</h1>
-
       <label htmlFor='search'>Search: </label>
       <input id='search' type='text' />
+    </div>
+  )
+}
 
-      <ul>
+function List() {
+  return (
+    <ul>
         {filteredList.map(function (item) {
           return <li key={item.objectID}>
             <span>
@@ -49,6 +51,20 @@ function App() {
             </li>;
         })}
       </ul>
+  )
+}
+
+function App() {
+
+  return (
+    <div>
+      <h1>{welcome.greeting}, {welcome.title}</h1>
+
+      <Search />
+      
+      <hr />
+
+      <List />
 
     </div>
   );
