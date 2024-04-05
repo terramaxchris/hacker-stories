@@ -8,21 +8,14 @@ const welcome = {
 
 const Search = (props) => {
   console.log("Search renders");
-  const [searchTerm, setSearchTerm] = React.useState('');
-
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-    //C
-    props.onSearch(event);
-  };
 
   return (
     <div>
       <label htmlFor='search'>Search: </label>
-      <input id='search' type='text' onChange={handleChange}/>
+      <input id='search' type='text' onChange={props.onSearch}/>
       {/* dont't do onChange={handleChange()}, that's bad--will mean it gets the RETURN VALUE of the function, not the func itself */}
       <p>
-        Searching for <strong>{searchTerm}</strong>.
+        Searching for <strong>{props.searchTerm}</strong>.
       </p>
     </div>
   );
@@ -33,7 +26,6 @@ const List = (props) => {
     return (
     <ul>
         {props.list
-          .filter((item) => item === item)
           .map((item) => {
           return <li key={item.objectID}>
             <span>
@@ -70,22 +62,25 @@ function App() {
     }
   ];
 
-  //A
+  // eslint-disable-next-line no-unused-vars
+  const [searchTerm, setSearchTerm] = React.useState('');
+
   const handleSearch = (event) => {
-    //D
-    console.log("D: " + event.target.value);
-  };
+    setSearchTerm(event.target.value);
+  }
+
+  const filteredStories = stories.filter((story) => story.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <div>
       <h1>{welcome.greeting}, {welcome.title}</h1>
 
       {/* B */}
-      <Search onSearch={handleSearch}/>
+      <Search onSearch={handleSearch} searchTerm={searchTerm}/>
       
       <hr />
 
-      <List list={stories}/>
+      <List list={filteredStories}/>
 
     </div>
   );
