@@ -1,17 +1,19 @@
 /* eslint-disable react/prop-types */
-//import * as React from 'react';
+import * as React from 'react';
 
 const welcome = {
   title: "React",
   greeting: "Hey",
 };
 
-const Search = () => {
+const Search = (props) => {
+  console.log("Search renders");
+  const [searchTerm, setSearchTerm] = React.useState('');
+
   const handleChange = (event) => {
-    //synthetic event
-    console.log(event);
-    // value of target (here: input HTMP element)
-    console.log(event.target.value);
+    setSearchTerm(event.target.value);
+    //C
+    props.onSearch(event);
   };
 
   return (
@@ -19,13 +21,20 @@ const Search = () => {
       <label htmlFor='search'>Search: </label>
       <input id='search' type='text' onChange={handleChange}/>
       {/* dont't do onChange={handleChange()}, that's bad--will mean it gets the RETURN VALUE of the function, not the func itself */}
+      <p>
+        Searching for <strong>{searchTerm}</strong>.
+      </p>
     </div>
-  )
-}
+  );
+};
 
-const List = (props) => 
+const List = (props) => {
+  console.log("List renders");
+    return (
     <ul>
-        {props.list.map((item) => {
+        {props.list
+          .filter((item) => item === item)
+          .map((item) => {
           return <li key={item.objectID}>
             <span>
               <a href={item.url}>{item.title}  </a>
@@ -36,10 +45,12 @@ const List = (props) =>
             </li>;
         })}
       </ul>
+    );
+  }
   
 
 function App() {
-
+  console.log("App renders");
   const stories = [
     {
       title: 'React',
@@ -57,13 +68,20 @@ function App() {
       points: 5,
       objectID: 1,
     }
-  ]
+  ];
+
+  //A
+  const handleSearch = (event) => {
+    //D
+    console.log("D: " + event.target.value);
+  };
 
   return (
     <div>
       <h1>{welcome.greeting}, {welcome.title}</h1>
 
-      <Search />
+      {/* B */}
+      <Search onSearch={handleSearch}/>
       
       <hr />
 
