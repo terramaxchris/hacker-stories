@@ -12,7 +12,7 @@ const Search = (props) => {
   return (
     <div>
       <label htmlFor='search'>Search: </label>
-      <input id='search' type='text' onChange={props.onSearch}/>
+      <input id='search' type='text' value={props.searchTerm} onChange={props.onSearch}/>
       {/* dont't do onChange={handleChange()}, that's bad--will mean it gets the RETURN VALUE of the function, not the func itself */}
       <p>
         Searching for <strong>{props.searchTerm}</strong>.
@@ -63,7 +63,7 @@ function App() {
   ];
 
   // eslint-disable-next-line no-unused-vars
-  const [searchTerm, setSearchTerm] = React.useState('');
+  const [searchTerm, setSearchTerm] = React.useState('React');
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
