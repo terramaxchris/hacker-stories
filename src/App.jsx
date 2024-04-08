@@ -40,19 +40,40 @@ const List = ({ list }) => {
     );
   }
 
-  const Item = ({ url, title, author, num_comments, points }) => {
-    return (
-      <li>
-        <span>
-          <a href={url}>{title}</a>
-        </span>
-        <span>{author}</span>
-        <span>{num_comments}</span>
-        <span>{points}</span>
-      </li>
-    )
-  }
-  
+const Item = ({ url, title, author, num_comments, points }) => {
+  return (
+    <li>
+      <span>
+        <a href={url}>{title}</a>
+      </span>
+      <span>{author}</span>
+      <span>{num_comments}</span>
+      <span>{points}</span>
+    </li>
+  )
+}
+
+const useStorageState = (key, initialState) => {
+  const [value, setValue] = React.useState(
+    localStorage.getItem(key) || initialState
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [value, key]);
+
+  return [value, setValue];
+
+  // const [searchTerm, setSearchTerm] = React.useState(
+  //   localStorage.getItem('search') || ''
+  // );
+
+  // React.useEffect(() => {
+  //   localStorage.setItem('search', searchTerm);
+  // }, [searchTerm]);
+
+  // return [searchTerm, setSearchTerm]
+}
 
 function App() {
   console.log("App renders");
@@ -76,11 +97,7 @@ function App() {
   ];
 
   // eslint-disable-next-line no-unused-vars
-  const [searchTerm, setSearchTerm] = React.useState(localStorage.getItem('search') || 'React');
-
-  React.useEffect(() => {
-    localStorage.setItem('search', searchTerm);
-  }, [searchTerm]);
+  const [searchTerm, setSearchTerm] = useStorageState('React');
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
