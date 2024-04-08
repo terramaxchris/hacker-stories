@@ -6,26 +6,34 @@ const welcome = {
   greeting: "Hey",
 };
 
-const Search = ({ search, onSearch }) => {
-  console.log("Search renders");
-  //const {search, oneSearch } = props;
+// const Search = ({ search, onSearch }) => {
+//   console.log("Search renders");
+//   //const {search, oneSearch } = props;
 
-  return (
-    <div>
-      <label htmlFor='search'>Search: </label>
-      <input 
-        id='search' 
-        type='text' 
-        value={ search } 
-        onChange={ onSearch }
-      />
-      {/* dont't do onChange={handleChange()}, that's bad--will mean it gets the RETURN VALUE of the function, not the func itself */}
-      <p>
-        Searching for <strong>{ search }</strong>.
-      </p>
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       <label htmlFor='search'>Search: </label>
+//       <input 
+//         id='search' 
+//         type='text' 
+//         value={ search } 
+//         onChange={ onSearch }
+//       />
+//       {/* dont't do onChange={handleChange()}, that's bad--will mean it gets the RETURN VALUE of the function, not the func itself */}
+//       <p>
+//         Searching for <strong>{ search }</strong>.
+//       </p>
+//     </div>
+//   );
+// };
+
+const InputWithLabel = ({ id, label, value, onInputChange }) => (
+  <>
+    <label htmlFor={id}>{label}</label>
+    &nbsp;
+    <input id={id} type="text" value={value} onChange={onInputChange} />
+  </>
+)
 
 const List = ({ list }) => {
   console.log("List renders");
@@ -63,16 +71,6 @@ const useStorageState = (key, initialState) => {
   }, [value, key]);
 
   return [value, setValue];
-
-  // const [searchTerm, setSearchTerm] = React.useState(
-  //   localStorage.getItem('search') || ''
-  // );
-
-  // React.useEffect(() => {
-  //   localStorage.setItem('search', searchTerm);
-  // }, [searchTerm]);
-
-  // return [searchTerm, setSearchTerm]
 }
 
 function App() {
@@ -97,7 +95,7 @@ function App() {
   ];
 
   // eslint-disable-next-line no-unused-vars
-  const [searchTerm, setSearchTerm] = useStorageState('React');
+  const [searchTerm, setSearchTerm] = useStorageState('storage', 'React');
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -112,7 +110,13 @@ function App() {
       <h1>{welcome.greeting}, {welcome.title}</h1>
 
       {/* B */}
-      <Search onSearch={handleSearch} search={searchTerm}/>
+      {/* <Search onSearch={handleSearch} search={searchTerm}/> */}
+      <InputWithLabel
+        id="search"
+        label="Search"
+        value={searchTerm}
+        onInputChange={handleSearch}
+      />
       
       <hr />
 
