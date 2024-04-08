@@ -6,38 +6,51 @@ const welcome = {
   greeting: "Hey",
 };
 
-const Search = (props) => {
+const Search = ({ search, onSearch }) => {
   console.log("Search renders");
+  //const {search, oneSearch } = props;
 
   return (
     <div>
       <label htmlFor='search'>Search: </label>
-      <input id='search' type='text' value={props.searchTerm} onChange={props.onSearch}/>
+      <input 
+        id='search' 
+        type='text' 
+        value={ search } 
+        onChange={ onSearch }
+      />
       {/* dont't do onChange={handleChange()}, that's bad--will mean it gets the RETURN VALUE of the function, not the func itself */}
       <p>
-        Searching for <strong>{props.searchTerm}</strong>.
+        Searching for <strong>{ search }</strong>.
       </p>
     </div>
   );
 };
 
-const List = (props) => {
+const List = ({ list }) => {
   console.log("List renders");
     return (
     <ul>
-        {props.list
-          .map((item) => {
-          return <li key={item.objectID}>
-            <span>
-              <a href={item.url}>{item.title}  </a>
-            </span>
-            <span>{item.author}  </span>
-            <span>{item.num_comments}  </span>
-            <span>{item.points}  </span>
-            </li>;
-        })}
+        {list
+          .map(({objectID, ...item}) => (
+            <Item key={objectID} {...item} />
+          )
+      )}
       </ul>
     );
+  }
+
+  const Item = ({ url, title, author, num_comments, points }) => {
+    return (
+      <li>
+        <span>
+          <a href={url}>{title}</a>
+        </span>
+        <span>{author}</span>
+        <span>{num_comments}</span>
+        <span>{points}</span>
+      </li>
+    )
   }
   
 
@@ -63,10 +76,16 @@ function App() {
   ];
 
   // eslint-disable-next-line no-unused-vars
-  const [searchTerm, setSearchTerm] = React.useState('React');
+  const [searchTerm, setSearchTerm] = React.useState(localStorage.getItem('search') || 'React');
+
+  React.useEffect(() => {
+    localStorage.setItem('search', searchTerm);
+  }, [searchTerm]);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
+
+    localStorage.setItem('search', event.target.value);
   }
 
   const filteredStories = stories.filter((story) => story.title.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -76,7 +95,7 @@ function App() {
       <h1>{welcome.greeting}, {welcome.title}</h1>
 
       {/* B */}
-      <Search onSearch={handleSearch} searchTerm={searchTerm}/>
+      <Search onSearch={handleSearch} search={searchTerm}/>
       
       <hr />
 
