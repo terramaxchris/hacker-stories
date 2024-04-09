@@ -6,30 +6,9 @@ const welcome = {
   greeting: "Hey",
 };
 
-// const Search = ({ search, onSearch }) => {
-//   console.log("Search renders");
-//   //const {search, oneSearch } = props;
-
-//   return (
-//     <div>
-//       <label htmlFor='search'>Search: </label>
-//       <input 
-//         id='search' 
-//         type='text' 
-//         value={ search } 
-//         onChange={ onSearch }
-//       />
-//       {/* dont't do onChange={handleChange()}, that's bad--will mean it gets the RETURN VALUE of the function, not the func itself */}
-//       <p>
-//         Searching for <strong>{ search }</strong>.
-//       </p>
-//     </div>
-//   );
-// };
-
-const InputWithLabel = ({ id, label, value, onInputChange }) => (
+const InputWithLabel = ({ id, value, onInputChange, children }) => (
   <>
-    <label htmlFor={id}>{label}</label>
+    <label htmlFor={id}>{children}</label>
     &nbsp;
     <input id={id} type="text" value={value} onChange={onInputChange} />
   </>
@@ -109,14 +88,12 @@ function App() {
     <div>
       <h1>{welcome.greeting}, {welcome.title}</h1>
 
-      {/* B */}
-      {/* <Search onSearch={handleSearch} search={searchTerm}/> */}
       <InputWithLabel
         id="search"
-        label="Search"
         value={searchTerm}
-        onInputChange={handleSearch}
-      />
+        onInputChange={handleSearch}>
+          <strong>Search: </strong>
+        </InputWithLabel>
       
       <hr />
 
