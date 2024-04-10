@@ -6,36 +6,61 @@ const welcome = {
   greeting: "Hey",
 };
 
-const InputWithLabel = ({ id, value, onInputChange, children }) => (
+const InputWithLabel = ({ id, value, onInputChange, isFocused, children }) => {
+  
+  // A
+  const inputRef = React.useRef();
+
+  // C
+  React.useEffect(() => {
+    if(isFocused && inputRef.current) {
+      // D
+      inputRef.current.focus();
+    }
+  }, [isFocused]);
+
+  return (
   <>
     <label htmlFor={id}>{children}</label>
     &nbsp;
-    <input id={id} type="text" value={value} onChange={onInputChange} />
+    {/* B */}
+    <input 
+      ref={inputRef}
+      id={id} 
+      type="text" 
+      value={value} 
+      autoFocus={isFocused} 
+      onChange={onInputChange} 
+      />
   </>
-)
+)}
 
-const List = ({ list }) => {
+const List = ({ list, changeStories }) => {
   console.log("List renders");
+
     return (
     <ul>
         {list
           .map(({objectID, ...item}) => (
-            <Item key={objectID} {...item} />
+            <Item key={objectID} itemID={objectID} {...item} deleteItem={changeStories} />
           )
       )}
       </ul>
     );
   }
 
-const Item = ({ url, title, author, num_comments, points }) => {
+const Item = ({ itemID, url, title, author, num_comments, points, deleteItem }) => {
   return (
     <li>
       <span>
-        <a href={url}>{title}</a>
+        <a href={url}>{title}, </a>
       </span>
-      <span>{author}</span>
-      <span>{num_comments}</span>
-      <span>{points}</span>
+      <span>{author}, </span>
+      <span>{num_comments} comments, </span>
+      <span>{points} points</span>
+      <button id={itemID} onClick={() => { 
+        deleteItem(itemID)
+         }}>Delete Book</button>
     </li>
   )
 }
@@ -54,7 +79,7 @@ const useStorageState = (key, initialState) => {
 
 function App() {
   console.log("App renders");
-  const stories = [
+  const [stories, changeStories] = React.useState([
     {
       title: 'React',
       url: 'https//reactjs.org',
@@ -71,7 +96,7 @@ function App() {
       points: 5,
       objectID: 1,
     }
-  ];
+  ]);
 
   // eslint-disable-next-line no-unused-vars
   const [searchTerm, setSearchTerm] = useStorageState('storage', 'React');
@@ -80,6 +105,10 @@ function App() {
     setSearchTerm(event.target.value);
 
     localStorage.setItem('search', event.target.value);
+  }
+
+  const deleteStory = () => {
+    changeStories(stories.filter((story) => story.objectID !== ))
   }
 
   const filteredStories = stories.filter((story) => story.title.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -91,13 +120,14 @@ function App() {
       <InputWithLabel
         id="search"
         value={searchTerm}
+        isFocused={false}
         onInputChange={handleSearch}>
           <strong>Search: </strong>
         </InputWithLabel>
       
       <hr />
 
-      <List list={filteredStories}/>
+      <List list={filteredStories} changeStories={changeStories}/>
 
     </div>
   );
