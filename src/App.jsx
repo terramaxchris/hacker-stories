@@ -35,32 +35,35 @@ const InputWithLabel = ({ id, value, onInputChange, isFocused, children }) => {
   </>
 )}
 
-const List = ({ list, changeStories }) => {
+const List = ({ list, deleteItem }) => {
   console.log("List renders");
 
     return (
     <ul>
         {list
-          .map(({objectID, ...item}) => (
-            <Item key={objectID} itemID={objectID} {...item} deleteItem={changeStories} />
+          .map((item) => (
+            <Item key={item.objectID} item={item} deleteItem={deleteItem} />
           )
       )}
       </ul>
     );
   }
 
-const Item = ({ itemID, url, title, author, num_comments, points, deleteItem }) => {
+const Item = ({ item, deleteItem }) => {
+const handleDeleteItem = () => {
+  deleteItem(item);
+  console.log(item);
+}
+
   return (
     <li>
       <span>
-        <a href={url}>{title}, </a>
+        <a href={item.ul}>{item.title}, </a>
       </span>
-      <span>{author}, </span>
-      <span>{num_comments} comments, </span>
-      <span>{points} points</span>
-      <button id={itemID} onClick={() => { 
-        deleteItem(itemID)
-         }}>Delete Book</button>
+      <span>{item.author}, </span>
+      <span>{item.num_comments} comments, </span>
+      <span>{item.points} points</span>
+      <button onClick={handleDeleteItem}>Delete Book</button>
     </li>
   )
 }
@@ -79,7 +82,7 @@ const useStorageState = (key, initialState) => {
 
 function App() {
   console.log("App renders");
-  const [stories, changeStories] = React.useState([
+  const [stories, setStories] = React.useState([
     {
       title: 'React',
       url: 'https//reactjs.org',
@@ -107,8 +110,11 @@ function App() {
     localStorage.setItem('search', event.target.value);
   }
 
-  const deleteStory = () => {
-    changeStories(stories.filter((story) => story.objectID !== ))
+  const deleteStory = (item) => {
+    //changeStories(stories.filter((story) => story.objectID !== ))
+    console.log(item);
+    const newStories = stories.filter((story) => item.objectID !== story.objectID);
+    setStories(newStories);
   }
 
   const filteredStories = stories.filter((story) => story.title.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -127,7 +133,7 @@ function App() {
       
       <hr />
 
-      <List list={filteredStories} changeStories={changeStories}/>
+      <List list={filteredStories} deleteItem={deleteStory}/>
 
     </div>
   );
