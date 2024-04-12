@@ -49,6 +49,7 @@ const useStorageState = (key, initialState) => {
 };
 
 function App() {
+  console.log('App renders');
   // eslint-disable-next-line no-unused-vars
   const [searchTerm, setSearchTerm] = useStorageState('storage', 'React');
 
@@ -57,23 +58,41 @@ function App() {
     { data: [], isLoading: false, isError: false }
   );
 
-  React.useEffect(() => {
+  const handleFetchStories = React.useCallback(() => {
     if (!searchTerm) return;
 
     dispatchStories({ type: 'STORIES_FETCH_INIT' });
 
     fetch(`${API_ENDPOINT}${searchTerm}`)
       .then((response) => response.json())
-      .then((result) => {dispatchStories({
+      .then((result) => {
+        dispatchStories({
           type: 'STORIES_FETCH_SUCCESS',
           payload: result.hits,
         });
       })
-      .catch(() => 
-        dispatchStories({
-          type: 'STORIES_FETCH_FAILURE' })
-      );
+      .catch(() => dispatchStories({ type: 'STORIES_FETCH_FAILURE' })
+    );
   }, [searchTerm]);
+
+  React.useEffect(() => {
+    handleFetchStories();
+    // if (!searchTerm) return;
+
+    // dispatchStories({ type: 'STORIES_FETCH_INIT' });
+
+    // fetch(`${API_ENDPOINT}${searchTerm}`)
+    //   .then((response) => response.json())
+    //   .then((result) => {dispatchStories({
+    //       type: 'STORIES_FETCH_SUCCESS',
+    //       payload: result.hits,
+    //     });
+    //   })
+    //   .catch(() => 
+    //     dispatchStories({
+    //       type: 'STORIES_FETCH_FAILURE' })
+    //   );
+  }, [handleFetchStories]);
 
   const handleRemoveStory = (item) => {
     dispatchStories({
@@ -83,14 +102,12 @@ function App() {
     console.log(stories)
   };
 
-
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
 
     localStorage.setItem('search', event.target.value);
   }
-  // const searchedStories = stories.data.filter((story) => story.title.toLowerCase().includes(searchTerm.toLowerCase()));
-
+  
   return (
     <div>
       <h1>My Hacker Stories</h1>
