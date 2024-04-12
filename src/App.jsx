@@ -60,8 +60,6 @@ function App() {
   );
 
   const handleFetchStories = React.useCallback(() => {
-    if (!url) return;
-
     dispatchStories({ type: 'STORIES_FETCH_INIT' });
 
     fetch(`${url}`)
